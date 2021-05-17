@@ -85,4 +85,4 @@
     - name: restart tomcat
       service: 
         name: tomcat.service
-        state: restarte
+        state: restart
