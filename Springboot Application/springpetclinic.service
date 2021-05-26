@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 [Unit]
 Description=Spring Pet Clinic
 After=syslog.target
@@ -10,16 +9,3 @@ SuccessExitStatus=143
 
 [Install] 
 WantedBy=multi-user.target
-=======
-[Unit]
-Description=Spring Pet Clinic
-After=syslog.target
-
-[Service]
-User=springbootuser
-ExecStart=/usr/bin/java -jar /usr/share/springpetclinic/spring-petclinic-2.4.2.jar
-SuccessExitStatus=143 
-
-[Install] 
-WantedBy=multi-user.target
->>>>>>> 32eeb3ff74e7f64129bb6449db91af5498943472
