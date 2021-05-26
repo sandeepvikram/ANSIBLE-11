@@ -50,6 +50,22 @@ NOW CREATE USER
 In this we will try to create a HOSTS FILE and create yml file WITH ANSIBLE COMMANDS
 
 IN THE LINE 47 WE SEE A LINK TO INSTALL A SPRING BOOT APPLICATION NAMED SPRING PET CLINIC, AFTER WE HAVE EXECUTED MANUAL STEPS.
+  1  sudo apt update
+  2  sudo apt install openjdk-11-jdk -y
+  3  sudo mkdir /usr/share/springpetclinic
+  4  wget https://referenceapplicationskhaja.s3-us-west-2.amazonaws.com/spring-petclinic-2.4.2.jar
+  5  sudo cp spring-petclinic-2.4.2.jar /usr/share/springpetclinic/
+  6  sudo adduser springbootuser
+  7  sudo chown springbootuser:springbootuser /usr/share/springpetclinic/spring-petclinic-2.4.2.jar
+  8  sudo chmod 500 /usr/share/springpetclinic/spring-petclinic-2.4.2.jar
+  9  sudo vi /etc/systemd/system/springpetclinic.service
+ 10  sudo systemctl enable springpetclinic.service
+ 11  sudo systemctl start springpetclinic.service
+ 12  sudo systemctl status springpetclinic.service
+
+ FROM THIS MANUAL STEPS WE TRY TO CREATE ANSIBLE PLAYBOOK
+
+### FROM LINUX M/C TO ACCESS GITHUB REPO USE GIT CLONE COMMAND AND TO GET THE LATEST CHANGES USE GIT PULL####
 
 NOW WE DO WRITE A PART OF ANSIBLE PLAYBOOK AND EXECUTE IT. 
 (REFER 
@@ -78,4 +94,16 @@ https://github.com/sandeepvikram/ANSIBLE-11/commit/3bc09ebcf8bf8c963c804ca451d99
 
 ############NOW WE HAVE SEEN A ERROR/REALIZATION THAT WHEN WE TRIED TO EXECUTE PLAYBOOK FROM THE UBUNTU CONTROL NODE IT THRE AN ERROR BECAUSE WE HAVE TO LOGIN INTO THE DEVOPS USER WE HAVE CREATED AND WE SHOULD EXECUTE THE STEPS.###############
 ############ALWAYS AFTER STOPPING AND STARTING THE CHECK THE COMMANDS BEFORE EXECUTING THE PLAYBOOKS I.E THE CONNECTION B/W NODES, SSH, SSH-KEYGEN, VERSIONS ETC##################
+############ ANOTHER ERROR YOU ARE DOING IS AFTER EXECUTING THE PLAYBOOK FROM ANSIBLE CONTROL NODE YOU ARE EXITING THE INSTANCE AND TRYING TO SSH INTO NODE FOR OBSERVING CHANGES. BUT YOU SHOULD DIRECTLY LOGIN FROM THE ANSIBLE CONTROL NODE WITH '''SSH "PRIVATE IP"'''
+########### ALWAYS LOGIN INTO DEVOPS USER WE HAVE CREATED BEFORE EXECUTING THE COMMANDS I.E '''ssh devops@"IP"'''
 
+REFER THE NEXT STEPS OF CREATING A USER NAMED SPRINGBOOT (REFER https://github.com/sandeepvikram/ANSIBLE-11/commit/4557aa411fb67903e769088da642132c64bd3a02)
+TO LOOK INTO THE USER CREATED LOGIN INTO NODE AND  
+         '''cat /etc/passwd'''
+
+NOW NEXT STEP IS TO CHANGE OWNERSHIP TO springbootuser (REFER 
+AND TYPE '''ls -l /usr/share/springpetclinic''' to look into the change of OWNERSHIP.
+
+NOW THE NEXT STEP IS TO CREATE A FILE NAMED springpetclinic.SERVICE AS IT IS THE WEB SERVICE. NOW IN THE MANUAL STEPS IN THE ABOVE LIST OF STEPS STEP 9 WE SEE HAVE CREATED A springpetclinic.SERVICE FILE WITH ''vi'' COMMAND 
+AND IN ANSIBLE WE WILL CREATE IT IN THE ANSIBLE CONTROL NODE AND COPY IT INTO THE NODE EVERY TIME THE COMMANDS ANSIBLE PLAYBOOK IS EXECUTED(WHICH WE WILL SEE IN FUTURE THAT IS NOT A GOOD PRACTICE)
+REFER()

@@ -21,4 +21,19 @@
         name: springbootuser
         password: springbootuser
         state: present
+    - name: Change the ownership of Springboot
+      file:
+        path: /usr/share/springpetclinic/spring-petclinic-2.4.2.jar
+        owner: springbootuser
+        mode: '500'
+        state: file
+    - name: Copy the springpetclinic.service
+      copy:
+        dest: /etc/systemd/system/springpetclinic.service
+        src: springpetclinic.service
+    - name: Start springpetclinic.service
+      systemd:
+        name: springpetclinic.service
+        enabled: yes
+        state: started        
              
