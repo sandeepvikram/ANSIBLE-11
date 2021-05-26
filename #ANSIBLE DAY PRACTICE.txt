@@ -48,3 +48,31 @@ NOW CREATE USER
 
   ###DAY 2###       
 In this we will try to create a HOSTS FILE and create yml file WITH ANSIBLE COMMANDS
+
+IN THE LINE 47 WE SEE A LINK TO INSTALL A SPRING BOOT APPLICATION NAMED SPRING PET CLINIC, AFTER WE HAVE EXECUTED MANUAL STEPS.
+
+NOW WE DO WRITE A PART OF ANSIBLE PLAYBOOK AND EXECUTE IT. 
+(REFER 
+https://github.com/sandeepvikram/ANSIBLE-11/commit/3bc09ebcf8bf8c963c804ca451d990e9732e738a)
+'''
+---
+- name: Deploy Spring Pet Clinic as a service
+  hosts: all
+  become: yes
+  tasks:
+    - name: Update Ubuntu packages and install open-JDK11
+      apt:
+        name: openjdk-11-jdk
+        update_cache: yes
+        state: present
+    - name: Create a Spring pet Clinic Directory
+      anisble.builtin.file:
+        path: /usr/share/springpetclinic
+        state: directory
+    - name: Download SpringPet Clinic
+      get_url:
+        url:   https://referenceapplicationskhaja.s3-us-west-2.amazonaws.com/spring-petclinic-2.4.2.jar
+        dest: /usr/share/springpetclinic/
+
+  '''
+

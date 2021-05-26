@@ -9,7 +9,7 @@
         update_cache: yes
         state: present
     - name: Create a Spring pet Clinic Directory
-      anisble.builtin.file:
+      ansible.builtin.file:
         path: /usr/share/springpetclinic
         state: directory
     - name: Download SpringPet Clinic
