@@ -123,4 +123,113 @@ IF YOU WANT TO KNOW MORE ABOUT WHAT IS HAPPENING IN THE BACKGROUND USE
    ''' ansible-playbook -i hosts spc-deploy.yml -vvvv'''
    HERE -vvvv gives more info and decreasing by on v gives less info.
 
-USE ''' ansible-playbook --help''' FOR GETTING INFO ABOUT PLAYBOOKS   
+USE ''' ansible-playbook --help''' FOR GETTING INFO ABOUT PLAYBOOKS
+
+##IMPORTANT INFO : WE CAN CHANGE VARS IN 3 LOCATION DURING EXECUTING A PLAYBOOKS 
+   1)IN THE PLAYBOOKS
+   2)IN THE COMMAND LINE WITH USING -e and changing VARS message to something else.
+   3)IN THE HOSTS FILE
+AND THERE IS A HIEARCHY >>>>>>     2>3>1     <<<<<<
+
+
+IN ANSIBLE IF WE HAVE INVENTORIES, THESE CONTAIN INFO ABOUT YOUR HOSTS LISTS I.E IN AN ORGANIZATION WE HAVE DIFFERENT SERVER's IP ADDR FOR DIFFERENT TASKS SAY DBSERVER, APPSERVER, ETC
+IF WE TYPE '''ansible-playbook --help''' WE SEE COMMAND '''--list-hosts'''
+
+SO IF WE HAVE HOSTS IN AN INVENTORY WE CAN USE --list-hosts command and ![Preview](G:\AWS FOLDERS\QUALITY THOUGHT\ANSIBLE\ANSIBLE1) THIS IS INI FORMAT.
+
+WE CAN ALSO WRITE THE INVENTORY IN YAML FORMAT ALSO
+   all:
+  hosts:
+    192.168.10.11:
+  children:
+    webserver:
+      hosts:
+        web1.qt.com:
+        web2.qt.com:
+    dbserver:
+      hosts:
+        db1.qt.com:
+        db2.qt.com:
+
+
+IN INVENTORY WE GIVE A RANGE OF HOSTS I.E WE CAN GIVE MULTPLE ADDRESS IF THEY BELONG TO SAME FAMILY
+ 172.31.27.10
+
+[webserver]
+web[01:15].vk.com
+web2.vk.com
+
+[appserver]
+app[01:25].vk.com
+ap[01:30:2].vk.com  >>>>>>>>HERE WE HAVE 30 SERVERS BUT THE ANSIBLE IF EXECUTED TAKES ONLY HOSTS SKIPPING 2 IN NUMBER
+
+HERE WE WILL GET WEN.VK.COM FROM 1 TO 15 AND APP.VK.COM TO 1 TO 25 
+
+REFER HERE FOR THE O/P:
+devopss@ip-172-31-16-254:~$ ansible -i hosts webserver --list-hosts
+  hosts (16):
+    web01.vk.com
+    web02.vk.com
+    web03.vk.com
+    web04.vk.com
+    web05.vk.com
+    web06.vk.com
+    web07.vk.com
+    web08.vk.com
+    web09.vk.com
+    web10.vk.com
+    web11.vk.com
+    web12.vk.com
+    web13.vk.com
+    web14.vk.com
+    web15.vk.com
+    web2.vk.com
+devopss@ip-172-31-16-254:~$ ansible -i hosts all --list-hosts
+  hosts (43):
+    172.31.27.10
+    app01.vk.com
+    app02.vk.com
+    app03.vk.com
+    app04.vk.com
+    app05.vk.com
+    app06.vk.com
+    app07.vk.com
+    app08.vk.com
+    app09.vk.com
+    app10.vk.com
+    app11.vk.com
+    app12.vk.com
+    app13.vk.com
+    app14.vk.com
+    app15.vk.com
+    app16.vk.com
+    app17.vk.com
+    app18.vk.com
+    app19.vk.com
+    app20.vk.com
+    app21.vk.com
+    app22.vk.com
+    app23.vk.com
+    app24.vk.com
+    app25.vk.com
+    app2.vk.com
+    web01.vk.com
+    web02.vk.com
+    web03.vk.com
+    web04.vk.com
+    web05.vk.com
+    web06.vk.com
+    web07.vk.com
+    web08.vk.com
+    web09.vk.com
+    web10.vk.com
+    web11.vk.com
+    web12.vk.com
+    web13.vk.com
+    web14.vk.com
+    web15.vk.com
+    web2.vk.com
+
+
+
+  
