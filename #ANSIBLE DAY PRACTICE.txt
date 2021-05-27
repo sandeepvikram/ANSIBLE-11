@@ -117,3 +117,10 @@ PACKAGE INSTALLED HERE JAVA 11 AND IF THERE IS A NEW VERSION IN FUTURE WE HAVE T
 REFER HERE FOR VARIABLES "https://github.com/sandeepvikram/ANSIBLE-11/blob/master/Springboot%20Application/spc-deploy.yml"
 
 WE HAVE ALSO SEEN THE ADDING OF DEBUG MESSAGES REFER "https://github.com/sandeepvikram/ANSIBLE-11/commit/00457a452336494655af7ac1843e94149e4245b0"
+ALSO REFER "https://github.com/sandeepvikram/ANSIBLE-11/commit/db16d94510bb2ee9bf6dd232d6132fd513c01fcd"
+
+IF YOU WANT TO KNOW MORE ABOUT WHAT IS HAPPENING IN THE BACKGROUND USE
+   ''' ansible-playbook -i hosts spc-deploy.yml -vvvv'''
+   HERE -vvvv gives more info and decreasing by on v gives less info.
+
+USE ''' ansible-playbook --help''' FOR GETTING INFO ABOUT PLAYBOOKS   

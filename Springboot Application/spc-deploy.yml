@@ -8,13 +8,17 @@
     app_download_url:  https://referenceapplicationskhaja.s3-us-west-2.amazonaws.com/spring-petclinic-2.4.2.jar
     app_filename: /usr/share/springpetclinic/spring-petclinic-2.4.2.jar
     app_username: springbootuser 
+    test_var: just for testing
   tasks:
     - name: Display JavaPackages
       debug:
         var: java_package
     - name: Display Springpet clinic user
       debug:
-        var: app_username          
+        var: app_username
+    - name: Testing
+      debug:
+        var: test_var              
     - name: Update Ubuntu packages and install open-JDK11
       apt:
         name: "{{java_package}}"
