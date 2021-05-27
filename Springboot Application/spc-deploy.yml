@@ -10,7 +10,7 @@
   tasks:
     - name: Display JavaPackages
       debug:
-        var: Java Package installing      
+        var: java_package      
     - name: Update Ubuntu packages and install open-JDK11
       apt:
         name: "{{java_package}}"
