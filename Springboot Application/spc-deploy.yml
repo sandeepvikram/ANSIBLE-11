@@ -2,29 +2,34 @@
 - name: Deploy Spring Pet Clinic as a service
   hosts: all
   become: yes
+  vars:
+    java_package: openjdk-11-jdk
+    app_dir: /usr/share/springpetclinic
+    app_download_url:  https://referenceapplicationskhaja.s3-us-west-2.amazonaws.com/spring-petclinic-2.4.2.jar
+    app_username: springbootuser 
   tasks:
     - name: Update Ubuntu packages and install open-JDK11
       apt:
-        name: openjdk-11-jdk
+        name: "{{java_package}}"
         update_cache: yes
         state: present
     - name: Create a Spring pet Clinic Directory
       ansible.builtin.file:
-        path: /usr/share/springpetclinic
+        path: "{{app_dir}}"
         state: directory
     - name: Download SpringPet Clinic
       get_url:
-        url:   https://referenceapplicationskhaja.s3-us-west-2.amazonaws.com/spring-petclinic-2.4.2.jar
-        dest: /usr/share/springpetclinic/ 
+        url: "{{app_download_url}}"
+        dest: "{{app_dir}}" 
     - name: Create a Springbootuser
       user:
-        name: springbootuser
-        password: springbootuser
+        name: "{{app_username}}"
+        password: "{{app_username}}"
         state: present
     - name: Change the ownership of Springboot
       file:
         path: /usr/share/springpetclinic/spring-petclinic-2.4.2.jar
-        owner: springbootuser
+        owner: "{{app_username}}"
         mode: '500'
         state: file
     - name: Copy the springpetclinic.service
