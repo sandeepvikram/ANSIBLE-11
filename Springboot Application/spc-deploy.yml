@@ -11,7 +11,10 @@
   tasks:
     - name: Display JavaPackages
       debug:
-        var: java_package      
+        var: java_package
+    - name: Display Springpet clinic user
+      debug:
+        var: app_username          
     - name: Update Ubuntu packages and install open-JDK11
       apt:
         name: "{{java_package}}"
