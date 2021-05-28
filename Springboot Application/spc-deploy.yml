@@ -1,6 +1,6 @@
 ---
 - name: Deploy Spring Pet Clinic as a service
-  hosts: all
+  hosts: appserver
   become: yes
   tasks:
     - name: Execution Fail if the distribution is not Ubuntu
