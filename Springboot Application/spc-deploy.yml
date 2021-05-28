@@ -2,7 +2,11 @@
 - name: Deploy Spring Pet Clinic as a service
   hosts: all
   become: yes
-  tasks:            
+  tasks:
+    - name: Execution Fail if the distribution is not Ubuntu
+      fail:
+        msg: The playbook only supports Ubuntu distributions
+        when: ansible_distribution != "Ubuntu"             
     - name: Update Ubuntu packages and install open-JDK11
       apt:
         name: "{{java_package}}"
