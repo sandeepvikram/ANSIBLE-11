@@ -2,23 +2,7 @@
 - name: Deploy Spring Pet Clinic as a service
   hosts: all
   become: yes
-  vars:
-    java_package: openjdk-11-jdk
-    app_dir: /usr/share/springpetclinic
-    app_download_url:  https://referenceapplicationskhaja.s3-us-west-2.amazonaws.com/spring-petclinic-2.4.2.jar
-    app_filename: /usr/share/springpetclinic/spring-petclinic-2.4.2.jar
-    app_username: springbootuser 
-    test_var: just for testing
-  tasks:
-    - name: Display JavaPackages
-      debug:
-        var: java_package
-    - name: Display Springpet clinic user
-      debug:
-        var: app_username
-    - name: Testing
-      debug:
-        var: test_var              
+  tasks:             
     - name: Update Ubuntu packages and install open-JDK11
       apt:
         name: "{{java_package}}"

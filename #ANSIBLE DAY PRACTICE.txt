@@ -232,4 +232,8 @@ devopss@ip-172-31-16-254:~$ ansible -i hosts all --list-hosts
 
 
 
+####DAY 4##########
+
+
+
   
