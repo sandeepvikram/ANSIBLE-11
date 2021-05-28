@@ -2,7 +2,7 @@
 - name: Deploy Spring Pet Clinic as a service
   hosts: all
   become: yes
-  tasks:             
+  tasks:            
     - name: Update Ubuntu packages and install open-JDK11
       apt:
         name: "{{java_package}}"
