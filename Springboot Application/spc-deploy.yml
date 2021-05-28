@@ -2,7 +2,11 @@
 - name: Deploy Spring Pet Clinic as a service
   hosts: all
   become: yes
-  tasks:             
+  tasks:
+    - name: Fail message for OS other than Ubuntu
+      fail:
+        msg: This works only on Ubuntu other OS support coming soon
+        when: ansible_distribution != "Ubuntu"             
     - name: Update Ubuntu packages and install open-JDK11
       apt:
         name: "{{java_package}}"
