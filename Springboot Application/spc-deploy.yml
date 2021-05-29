@@ -12,10 +12,16 @@
         name: "{{java_package}}"
         update_cache: yes
         state: present
+    - name: Packages Installed
+      debug:
+        msg: Installed "{{java_package}}" is installed.    
     - name: Create a Spring pet Clinic Directory
       ansible.builtin.file:
         path: "{{app_dir}}"
         state: directory
+    - name: Created a Directory
+      debug:
+        msg: Installed "{{app_dir}}" is created.    
     - name: Download SpringPet Clinic
       get_url:
         url: "{{app_download_url}}"
