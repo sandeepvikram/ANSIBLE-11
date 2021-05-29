@@ -52,8 +52,8 @@
       debug:
         msg: Installed "{{java_package}}" is installed.
 
-     - name: Packages Installed
-       debug:
-        msg: Installed "{{app_dir}}" is installed.
+    - name: Created a Directory
+      debug:
+        msg: Installed "{{app_dir}}" is Created.
                           
              
