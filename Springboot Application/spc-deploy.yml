@@ -12,16 +12,14 @@
         name: "{{java_package}}"
         update_cache: yes
         state: present
-    - name: Packages Installed
-      debug:
-        msg: Installed "{{java_package}}" is installed.    
+      notify:
+        - Packages Installed           
     - name: Create a Spring pet Clinic Directory
       ansible.builtin.file:
         path: "{{app_dir}}"
         state: directory
-    - name: Created a Directory
-      debug:
-        msg: Installed "{{app_dir}}" is created.    
+      notify: 
+        - Created a Directory     
     - name: Download SpringPet Clinic
       get_url:
         url: "{{app_download_url}}"
@@ -31,12 +29,8 @@
         name: "{{app_username}}"
         password: "{{app_username}}"
         state: present
-    - name: Change the ownership of Springboot
-      file:
-        path: /usr/share/springpetclinic/spring-petclinic-2.4.2.jar
-        owner: "{{app_username}}"
-        mode: '500'
-        state: file
+      notify:
+        - Change the ownership of Springboot     
     - name: Copy the springpetclinic.service
       copy:
         dest: /etc/systemd/system/springpetclinic.service
@@ -45,5 +39,20 @@
       systemd:
         name: springpetclinic.service
         enabled: yes
-        state: started        
+        state: started
+  handlers:
+    - name: Change the ownership of Springboot
+      file:
+        path: /usr/share/springpetclinic/spring-petclinic-2.4.2.jar
+        owner: "{{app_username}}"
+        mode: '500'
+        state: file
+
+    - name: Packages Installed
+      debug:
+        msg: Installed "{{java_package}}" is installed.
+        
+     - name: Created a Directory
+      debug:
+        msg: Installed "{{app_dir}}" is created.                  
              
