@@ -6,14 +6,20 @@
     - name: Execution Fail if the distribution is not Ubuntu
       fail:
         msg: The playbook only supports Ubuntu distributions
-      when: ansible_facts ['distribution'] != "Ubuntu"             
+      when: ansible_facts ['distribution'] != "Ubuntu" and ansible_facts ['distribution'] != "CentOS"             
     - name: Update Ubuntu packages and install open-JDK11
       apt:
         name: "{{java_package}}"
         update_cache: yes
         state: present
       notify:
-        - Packages Installed           
+        - Packages Installed
+      when:ansible_facts ['distribution'] != "Ubuntu"
+    - name: Update CentOS Packages and install Java
+      yum:
+        name: "{{java_package}}"
+        state: present
+      when: ansible_facts ['distribution'] != "CentOS"                   
     - name: Create a Spring pet Clinic Directory
       ansible.builtin.file:
         path: "{{app_dir}}"
