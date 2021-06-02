@@ -273,3 +273,93 @@ AND WE HAVE MOVED THE CHANGE OWNERSHIP OF THE USER TO HANDLER BECAUSE WE ONLY NE
 AND HERE WE HAVE DONE SILLY MISTAKE OF INDENTATION AND IT THREW AN ERROR. https://github.com/sandeepvikram/ANSIBLE-11/commit/772531cee3ed58de32c1142c1b5e2b01072e864e
 
 
+##############*****************VVVVVVVVVVVVVVVVVVVVIMP*****************####################### 6/2/2021
+VIDEO NO: 10 DATE: 15/5/21
+
+VVVVVVVVVVVVVVVVVVVVIMP NOTES:
+
+IN THE STARTING OF THE VIDEO WE WERE CREATING THE SPRING BOOT APPLICATION FOR CENTOS7 ( IN THE PREVIOUS VIDEOS WE DID ONLY FOR Ubuntu)
+NOW WHILE IF YOU CAN SEE THE CODE BELOW WE CREATE FAIL MESSAGES FOR OS OTHER THAN UBUNTU AND CENTOS. NOW IT DONE.
+
+IN THE CODE WE SPECIFY WHEN DO WE NEED TO INSTALL JAVA PACKAGES IN UBUNTU I.E WHEN """ansible_facts ['distribution'] == "Ubuntu""" AND SIMILARLY WHEN
+"""ansible_facts ['distribution'] == "CentOS"""  WE INSTALL JAVA IN CENTOS. NOW WE ARE GOOD SO FAR SO GOOD.
+
+NOW WE HAVE DEFINED VARIABLES IN APPSERVER BY THE NAME """java_package""" NOW IN THE APPSERVER WE HAVE GIVEN ONLY FOR UBUNTU AND THE JAVA PACKAGE FOR 
+CENTOS IS DIFFERENT I.E FOR UBUNTU: openjdk-11-jdk FOR CENTOS: java-11-openjdk. SO IF YOU WHEN EXECUTING THE PLAYBOOK THE ANSIBLE IS TAKING ONLY JAVA PACKAGE 
+FOR UBUNTU ONLY BUT GIVING ERROR SAYING """fatal: [172.31.21.18]: FAILED! => {"changed": false, "msg": "No package matching 'openjdk-11-jdk' 
+found available, installed or updated", "rc": 126, "results": ["No package matching 'openjdk-11-jdk' found available, installed or updated"]}
+
+NOW IF YOU OBSERVER THE ANSIBLE IS TAKING ONLY JAVA PACKAGE OF UBUNTU BUT NOT TAKING THE PACKAGE OF CENTOS. NOW WE WERE GOING ALL AROUND TO FIND THE ERROR.
+
+************ BUT TO RESOLVE THE ERROR WE DID THIS
+
+ java_package1: openjdk-11-jdk
+ java_package2: java-11-openjdk
+
+ ***** AS YOU CAN SEE WE SPECIFIED THE JAVA PACKAGES SEPERATLY UNDER java_package1 AND java_package2 AND GIVEN UBUNTU AND CENTOS JAVA PACKAGES LIST.
+ NOW THIS HOW WE RECTIFIED THE ERROR
+
+
+---
+- name: Deploy Spring Pet Clinic as a service
+  hosts: appserver
+  become: yes
+  tasks:
+    - name: Execution Fail if the distribution is not Ubuntu
+      fail:
+        msg: The playbook only supports Ubuntu distributions
+      when: ansible_facts ['distribution'] != "Ubuntu" and ansible_facts ['distribution'] != "CentOS"             
+    - name: Update Ubuntu packages and install open-JDK11
+      apt:
+        name: "{{java_package1}}"
+        update_cache: yes
+        state: present
+      notify:
+        - Packages Installed
+      when: ansible_facts ['distribution'] == "Ubuntu"
+    - name: Update CentOS Packages and install Java
+      yum:
+        name: "{{java_package2}}" 
+        state: present
+      when: ansible_facts ['distribution'] == "CentOS"                   
+    - name: Create a Spring pet Clinic Directory
+      ansible.builtin.file:
+        path: "{{app_dir}}"
+        state: directory
+      notify: 
+        - Created a Directory     
+    - name: Download SpringPet Clinic
+      get_url:
+        url: "{{app_download_url}}"
+        dest: "{{app_filename}}" 
+    - name: Create a Springbootuser
+      user:
+        name: "{{app_username}}"
+        password: "{{app_username}}"
+        state: present
+      notify:
+        - Change the ownership of Springboot     
+    - name: Copy the springpetclinic.service
+      copy:
+        dest: /etc/systemd/system/springpetclinic.service
+        src: springpetclinic.service
+    - name: Start springpetclinic.service
+      systemd:
+        name: springpetclinic.service
+        enabled: yes
+        state: started
+  handlers:
+    - name: Change the ownership of Springboot
+      file:
+        path: /usr/share/springpetclinic/spring-petclinic-2.4.2.jar
+        owner: "{{app_username}}"
+        mode: '500'
+        state: file
+
+    - name: Packages Installed
+      debug:
+        msg: Installed "{{java_package}}" is installed.
+
+    - name: Created a Directory
+      debug:
+        msg: Installed "{{app_dir}}" is Created.
