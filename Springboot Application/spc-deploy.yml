@@ -18,6 +18,7 @@
     - name: Update CentOS Packages and install Java
       yum:
         name: "{{java_package}}"
+        update_cache: yes
         state: present
       when: ansible_facts ['distribution'] == "CentOS"                   
     - name: Create a Spring pet Clinic Directory
