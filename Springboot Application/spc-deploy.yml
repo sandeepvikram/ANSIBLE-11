@@ -14,12 +14,12 @@
         state: present
       notify:
         - Packages Installed
-      when:ansible_facts ['distribution'] != "Ubuntu"
+      when: ansible_facts ['distribution'] == "Ubuntu"
     - name: Update CentOS Packages and install Java
       yum:
         name: "{{java_package}}"
         state: present
-      when: ansible_facts ['distribution'] != "CentOS"                   
+      when: ansible_facts ['distribution'] == "CentOS"                   
     - name: Create a Spring pet Clinic Directory
       ansible.builtin.file:
         path: "{{app_dir}}"
