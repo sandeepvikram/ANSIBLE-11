@@ -1,2 +1,2 @@
 ---
-java_package1: java-8-openjdk java-8-openjdk-devel
+java_package: java-11-openjdk
