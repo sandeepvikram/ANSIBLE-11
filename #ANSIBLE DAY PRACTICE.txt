@@ -13,7 +13,7 @@ NOW CREATE USER
   sudo adduser devops                  (GIVE PASSWD AND ENTER FEW TIMES AND USER IS CREATED)
   sudo visudo                          ( CHANGE PERSMISSIONS TO GIVE ACCESS devops USER TO ACCESS  INSTANCE WITHOUT PEM FILE)
    '''     
-     devopss ALL=(ALL:ALL) NOPASSWD:ALL    (ADD THIS COMMAND IN VISUDO IN SUDO COMMAND, WE ADD THIS COMMAND TO HAVE DEVOPS USER TO PERFORM COMMANDS WITHOUT THE PASSWORD AUTH EVERYTIME)
+     devops ALL=(ALL:ALL) NOPASSWD:ALL    (ADD THIS COMMAND IN VISUDO IN SUDO COMMAND, WE ADD THIS COMMAND TO HAVE DEVOPS USER TO PERFORM COMMANDS WITHOUT THE PASSWORD AUTH EVERYTIME)
 
 *****THE ABOVE STEPS IS COMMON FOR ALL THE NODES AND ACN************
 AFTER CREATING DEVOPS USER IN ALL NODES AND ACN TRY TO LOGIN AS DEVOPS USER WITH COMMAND ""SSH DEVOPS@PUBLICIP""
@@ -422,6 +422,194 @@ WE CREATED UNTIL UNTARRING THE THE TOMCAT USING UNARCHIVE.
  
  ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
        
+TODAY WE 18/5/21 WE HAVE CREATED ROLES FOR SPRINGPET CLINIC AND LAMP
+FIRST WE GOT THE SKELETON(STRUCTURE OF A ROLE) OF A ROLE AND WE HAVE PASTED THE RESPECTIVE THINGS TO THEIR RESPECTIVE PLACES.
+LIKE IN THE ROLES FOLDER CREATED WE HAVE SUBFOLDERS WITH 
+1)DEFAULTS
+2)TASKS
+3)FILES
+4)META
+5)TESTS
+6)VARS
+7)README
+8)SOME TRAVIS.YML FILE
+
+WE PASTE THE CONTENTS OF SAY spc-deploy.YML FILE'S TASKS CONTENT INTO TASKS SUBFOLDER IN ROLES FOLDER. SAME WITH HANDLERS AND IN FILES SUBFOLDER WE CREATE 
+SAY THE SERVICE FILE IN springpetclinic AND INFO.PHP IN LAMP
+IN ALL THE SUBFOLDERS WE HAVE MAIN.YML
+IN THE FOLDER OUTSIDE OF ROLES
+SAY WE HAVE CREATED ROLE SKELETON FOLDER>>>IN THAT WE HAVE ROLES FOLDER>>> IN THAT WE HAVE ALL THAT MENTIONED ABOVE
+IN THE SKELETONFOLDER>>OUTSIDE OF ROLES FOLDER>> WE CREATE AN main.YML FILE AND WE CREATE THE HOSTS AND GROUP_VARS AND HOSTS_VARS FILES.
+IN THE MAIN.YML WE GIVE SPECIFY LIKE THIS
+''''
+---
+- name: install spring pet clinic
+  become: yes
+  hosts: appserver
+  roles:
+    - springpetclinic
+
+- name: install LAMP
+  become: yes
+  hosts: dbserver
+  roles:
+    - lamp
+
+ ''''
+
+
+ WE HAVE RUN THIS ROLE AND WE GOT SUCCESS  REFER HERE (https://github.com/sandeepvikram/Roles/tree/main/role_skeleton/role)
+
+(https://github.com/sandeepvikram/Roles/commit/d754deb033c075eb50c600344fd9312c62c255b0)
+                                          
+IN THIS WE PROCESS WE HAD SOME DIFFICULTIES NOT PERTAINING TO PLAYBOOK BUT WE HAD SOME ISSUES WITH GITHUB WITH PULL REQUESTS NOTHING HAPPENED AND ALL WENT WELL
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+TODAY WE DID SOME MINOR TOPICS FROM VARIABLE PRECEDENCE, FORKS, DEBUGGER
+
+VARIABLE PRECEDENCE: IN ANSIBLE IT HAS SOME HIEARCHY WHEN DEFINING VARIABLES IN A PLAYBOOK. 
+HERE IS THE LIST OF VARIABLE PRECEDENCE HIEARCHY LIST FROM LOW TO HIGH
+
+Ansible does apply variable precedence, and you might have a use for it. Here is the order of precedence from least to greatest (the last listed variables override all other variables):
+
+command line values (for example, -u my_user, these are not variables)
+
+role defaults (defined in role/defaults/main.yml) 1
+
+inventory file or script group vars 2
+
+inventory group_vars/all 3
+
+playbook group_vars/all 3
+
+inventory group_vars/* 3
+
+playbook group_vars/* 3
+
+inventory file or script host vars 2
+
+inventory host_vars/* 3
+
+playbook host_vars/* 3
+
+host facts / cached set_facts 4
+
+play vars
+
+play vars_prompt
+
+play vars_files
+
+role vars (defined in role/vars/main.yml)
+
+block vars (only for tasks in block)
+
+task vars (only for the task)
+
+include_vars
+
+set_facts / registered vars
+
+role (and include_role) params
+
+include params
+
+extra vars (for example, -e "user=my_user")(always win precedence)
+
+IF WE HAVE A VARIABLE TO BE DEFINED SAY IF YOU LOOK AT LAMP PLAYBOOK WE HAVE java_package1 OR java_package2 ANYTHING OF THE BOTH.
+IN THE PLAYBOOK WE HAVE DEFINED IT IN THE APPSERVER IN GROUP_VARS. IF YOU HAVE A LOOK AT THE THE LIST ABOVE HOST OR GROUP_VARS HAS A LEAST POWER WHEN COMPARED
+TO SAY PASSING ARGUMENTS FROM COMMAND LINE extra VARS WITH PASSING ''-e'' at the ansible-playbook command line.
+SO THIS WAY WE CAN HAVE VARIABLE PRECEDENCE.
+
+
+FORKS:
+IN ANSIBLE FORKS MEANS THIS REPRESENTS HOW MANY PARALLEL NODES CAN ANSIBLE EXECUTE. BY DEFAULT ANSIBLE IS CONFIGURED TO RUN ON 5 NODES
+BUT IF YOU WANT TO RUN IT ON MULTIPLE NODES SAY 10 WE CAN DIRECTLY RUN FROM ansible-playbook COMMAND LINE AS '' ansible-playbook -f 10...''
+
+BUT IF YOU WANT TO RUN SAY 15 NODES ALWAYS BY DEFAULT EVERYTIME WE CAN CHANGE THE SETTING IN ANSIBLE CONG=FIG FILE.
+
+DEBUGGING IN ANSIBLE:
+In Ansible we can resolve errors in the debugger
+For that add debugger in the play (debugger: on_failed)
+EXAMPLE:
+---
+- name: Create variable precedence demo
+  hosts: all
+  debugger: on_failed
+  tasks:
+   - name: Debugger demo
+     file:
+      path: "{{file-path}}"
+      state: touch 
+   - name: Variable Precedence
+     debug: 
+       msg: inventory value is "{{var1}}"
+
+ SO THE DEBUGGER IN ANSIBLE IS LIKE ANYOTHER DEBUGGER IN LANGUAGES, BUT IT DOES NOT PROVIDE A FULL FLETCHED SOLUTION.
+ THERE ARE SOME DEBUGGER COMMANDS WHEN WE RUN A PLAYBOOK AND WE HAVE AN ERROR.
+
+ I WILL ATTACH THE SCREEN SHOT IN THE VARIABLE PRECEDENCE FOLDER SEE IT      
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+TODAY WE LOOK AT ANSIBLE COLLECTIONS. COLLECTIONS ARE
+Collections are a distribution format for Ansible content. They can be used to package and distribute playbooks, roles, modules, and plugins. To learn how to develop collections, see Developing collections in the Ansible documentation.
+THESE ARE SIMILAR TO ROLES
+ANSIBLE COLLECTIONS ARE THE FORMAT IN WHICH ANSIBLE CONTENT LIKE MODULES, ROLES, PLAYBOOKS AND PLUGIN, ETC. CAN BE DISTRIBUTED TO THE ANSIBLE USERS ACROSS ANSIBLE COMMUNITY AND ANSIBLE USERS. 
+AN ANSIBLE COLLECTION CAN INCLUDE A ROLE, MODULES, PLAYBOOK, PLUGINS. THIS DISTRIBUTION IS PERFORMED BY ANSIBLE GALAXY, WHICH IS A PLACE FROM WHERE YOU CAN INSTALL OR GET OTHER DEVELOPER’S SHARED CONTENT. 
+ALSO, YOU CAN UPLOAD YOUR CODE/CONTENT IN ANSIBLE GALAXY TO FURTHER SHARE IT. 
+THERE IS A GLOBAL LOCATION FOR THE ANSIBLE GALAXY SERVER BUT IF YOU HAVE OTHER GALAXY SERVER LIKE REDHAT AUTOMATION HUB, THEN YOU CAN CONFIGURE THE SAME IN YOUR ANSIBLE SETUP.
+
+
+STEPS:
+
+mkdir devops_collection
+cd devops_collection/
+ansible-galaxy collection init vikram.devops   ####THIS COMMAND CREATES A ANSIBLE COLLECTION SKELETON
+
+NOW WE HAD CREATED ROLES IN THE EARLIER SECTION , NOW COPY THE LAMP AND SPC TO FROM ROLES FOLDER IN ROLES SECTION TO ROLES FOLDER IN GALAXY VIKRAM. THE 
+GALAXY SKELETON WE HAVE CREATED.
+SAMPLE OF GALAXY COLLECTION SKELETON
+vikram
+    └── devops
+        ├── README.md
+        ├── docs
+        ├── galaxy.yml
+        ├── plugins
+        │   └── README.md
+        └── role
+
+
+WE HAVE TO COPY THE LAMP AND SPC TO THIS ROLE FOLDER FROM THE ROLE FOLDER WE HAVE CREATED WHILE DOING ROLES EXCERSISE.
+NOW GO TO COLLECTIONS FOLDER WHERE WE HAVE CREATED THE GALAXY COLLECTIONS WITH THE ABOVE COMMAND.
+
+NOW WE HAVE TO BUILD THE THE COLLECTION WITH
+'' ansible-galaxy collection build''
+
+IF WE BUILD WITHOUT ERRORS THEN A TAR FILE WILL BE GENERATED.
+
+NOW INSTALL THE TAR FILE TO A FOLDER NAMED TEST_COLLECTION WHICH WE HAVE CREATED IN WHICH IT HAS MAIN.YML HOSTS GROUP_VARS
+WITH THE COMMAND
+''
+ ansible-galaxy collection install  /home/devops/ANSIBLE2/Collections/vikram-devops-1.0.0.tar.gz -p ./collections
+''
+
+NOW YOU HAVE TO WRITE THE MAIN.YML FILE WITH THE FOLLOWING CONTENT
+''
+---
+- name: learningcollections
+  hosts: all
+  become: yes
+  collections:
+    - vikram.devops
+  roles:
+    - role: lamp
+''
+
+NOW EXECUTE COMMAND ansible-playbook 
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+NOW WE WILL LOOK AT ANSIBLE VAULTS
 
 
 
